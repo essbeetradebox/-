@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ess Bee Trade Box Private Limited</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* Styles for the loading screen. Want to make sure the logo is front and center while the page loads in the background. */
+#loader {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: #ffffff;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+transition: opacity 1s ease, visibility 1s ease;
+}
+#loader.hidden {
+opacity: 0;
+visibility: hidden;
+}
+#loader img {
+animation: pulse 1.5s infinite ease-in-out;
+}
+#loader .tagline {
+margin-top: 1rem;
+font-size: 1.25rem;
+color: #a0a0a0;
+opacity: 0;
+animation: fadeIn 1.5s ease 0.5s forwards;
+}
+@keyframes pulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.05); }
+100% { transform: scale(1); }
+}
+@keyframes fadeIn {
+to {
+opacity: 1;
+}
+}
+.loading {
+overflow: hidden; /* Prevents scrolling while the loader is active. */
+}
+
+/* --- NEW TYPOGRAPHY SYSTEM --- */
+/* Centralizing my heading fonts. Makes it easy to change the look and feel later if needed. */
+.section-title, .hero-content h1, .brief-section h3 {
+font-family: 'Playfair Display', serif;
+}
+.section-title {
+font-size: 2.5rem;
+}
+@media (min-width: 768px) {
+.section-title {
+font-size: 3rem;
+}
+}
+
+/* --- NEW DYNAMIC BACKGROUND & ANIMATION STYLES --- */
+/* This is for the parallax effect on the stats section. Fixed attachment is the key here. */
+.parallax-bg {
+background-image: url('images/electronics-texture-bg.jpg');
+background-attachment: fixed;
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+position: relative;
+}
+.parallax-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(255, 255, 255, 0.85); /* A light overlay to make text readable */
+}
+/* Adding a subtle hover effect to the info cards. Makes the UI feel more interactive. */
+.brief-section {
+transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+.brief-section:hover {
+transform: translateY(-10px) scale(1.02);
+}
+
+/* Custom CSS variable for the main brand color. If the client wants to change the color scheme, I only have to change it in one place. */
+:root {
+--brand-primary-blue: #2d8cff;
+--brand-dark-text: #2C2C2C;
+}
+
+/* Re-routing some old variable names I might have used. Just a bit of cleanup to stay consistent. */
+.text-\[var\(--vhm-gold\)\],
+.focus\:ring-\[var\(--vhm-gold\)\],
+.focus\:border-\[var\(--vhm-gold\)\],
+.focus\:ring-\[var\(--vhm-gold\)\] {
+color: var(--brand-primary-blue);
+border-color: var(--brand-primary-blue);
+--tw-ring-color: var(--brand-primary-blue);
+}
+
+/* Little utility classes for text alignment in the pre-footer. */
+.justify-text {
+text-align: justify;
+text-align-last: center; /* Makes the last line look less awkward. */
+}
+.pre-footer-link {
+display: block; 
+text-align: center;
+}
+
+/* Mobile dropdown styles. Had to write custom CSS for this because default Tailwind dropdowns are tricky for nested mobile menus. */
+#mobile-menu .mobile-dropdown-content {
+    display: none;
+    background-color: #f3f4f6;
+    padding-left: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+#mobile-menu .mobile-dropdown-content a {
+    padding: 0.75rem 1rem;
+    display: block;
+    color: #4b5563;
+    transition: background-color 0.2s ease;
+}
+#mobile-menu .mobile-dropdown-content a:hover {
+    background-color: #e5e7eb;
+}
+#mobile-menu .mobile-dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+#mobile-menu .mobile-dropdown-toggle i {
+    transition: transform 0.2s ease;
+    margin-left: auto; /* Shove that icon to the right */
+    padding: 0.5rem; /* Bigger click target */
+    cursor: pointer;
+}
+#mobile-menu .mobile-dropdown-toggle.active i {
+    transform: rotate(180deg); /* The classic dropdown arrow spin */
+}
+
+/* Styling for the links when they get cloned into the mobile menu by my JS. */
+#mobile-menu .nav-link {
+    font-weight: 500;
+    text-decoration: none;
+}
+#mobile-menu .nav-link:hover {
+    color: var(--brand-primary-blue);
+}
+#mobile-menu .mobile-dropdown-toggle span {
+    flex-grow: 1;
+    text-align: left;
+    padding-right: 0.5rem;
+}
+</style>
+</head>
+<body class="bg-gray-100 loading">
+
+<div id="loader">
+<img src="Assets/logo.jpg" alt="Ess Bee Trade Box Pvt Ltd Logo" class="h-24 w-auto">
+<p class="tagline" style="font-family: 'Playfair Display', serif;">Ess Bee Trade Box Pvt Ltd </p>
+</div>
+
+<header class="bg-white shadow-md sticky top-0 z-50">
+<nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+<a href="index.html" class="flex items-center">
+<img src="Assets/logo.jpg" alt="Ess Bee Trade Box Pvt Ltd Logo" class="h-20 md:h-20 w-auto">
+</a>
+<div class="hidden md:flex items-center space-x-1 lg:space-x-2" id="desktop-nav-links">
+<a href="index.html" class="nav-link nav-link-active px-3 py-2 rounded-md text-sm font-medium">Home</a>
+<div class="dropdown">
+<a href="services.html" class="nav-link px-3 py-2 rounded-md text-sm font-medium flex items-center">
+What We Do <i class="fas fa-chevron-down text-xs ml-1"></i>
+</a>
+<div class="dropdown-content">
+<a href="design-engineering.html">Design & Engineering</a>
+<a href="metal-fabrication.html">Metal Fabrication</a>
+<a href="powder-coating.html">Powder Coating</a>
+<a href="component-integration.html">Component Integration</a>
+<a href="quality-assurance.html">Quality Assurance</a>
+</div>
+</div>
+<div class="dropdown">
+<a href="#" class="nav-link px-3 py-2 rounded-md text-sm font-medium flex items-center">
+Our Gallery <i class="fas fa-chevron-down text-xs ml-1"></i>
+</a>
+<div class="dropdown-content">
+<a href="our-work.html">Our Work</a>
+<a href="our-products.html">Our Proudcts</a>
+<a href="our-certificates.html">Our Certificates</a>
+</div>
+</div>
+<a href="about-us.html" class="nav-link px-3 py-2 rounded-md text-sm font-medium">About Us</a>
+<a href="contact.html" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Contact Us</a>
+</div>
+<div class="md:hidden">
+            <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+    </nav>
+    <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg border-t border-gray-200">
+        <a href="index.html" class="block nav-link px-4 py-3 border-b border-gray-100">Home</a>
+       
+        <div class="border-b border-gray-100">
+            <button id="mobile-services-dropdown-button" class="flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700">
+                What We Do
+                <i class="fas fa-chevron-down text-xs transition-transform duration-300 transform"></i>
+            </button>
+            <div id="mobile-services-dropdown-content" class="hidden pl-8">
+                <a href="services.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Overview</a>
+                <a href="design-engineering.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Design & Engineering</a>
+                <a href="metal-fabrication.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Metal Fabrication</a>
+                <a href="powder-coating.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Powder Coating</a>
+                <a href="component-integration.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Component Integration</a>
+                <a href="quality-assurance.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Quality Assurance</a>
+            </div>
+        </div>
+
+        <div class="border-b border-gray-100">
+            <button id="mobile-gallery-dropdown-button" class="flex justify-between items-center w-full px-4 py-3 text-left font-medium text-gray-700">
+                Our Gallery
+                <i class="fas fa-chevron-down text-xs transition-transform duration-300 transform"></i>
+            </button>
+            <div id="mobile-gallery-dropdown-content" class="hidden pl-8">
+                <a href="our-work.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Our Work</a>
+                <a href="our-products.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Our Products</a>
+                <a href="our-certificates.html" class="block px-4 py-3 text-sm text-gray-600 hover:text-[var(--brand-primary-blue)] transition-colors duration-300">Our Certificates</a>
+            </div>
+             <a href="about-us.html" class="block nav-link px-4 py-3 border-b border-gray-100">About Us</a>
+        <a href="contact.html" class="block nav-link px-4 py-3 border-b border-gray-100 nav-link-active">Contact Us</a>
+        </div>
+    </div>
+</header>
+
+<main>
+<section id="home" class="hero-section-video-bg py-20 md:py-32 min-h-[70vh] md:min-h-[80vh] flex items-center justify-center">
+<video autoplay muted loop playsinline id="heroVideo" poster="images/hero_poster_electronics_fallback.jpg">
+<source src="Assets/Background vdo 1080P.mp4" type="video/mp4">
+</video>
+<div class="hero-overlay"></div>
+<div class="hero-content container mx-auto px-6 text-center">
+<h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white drop-shadow-md">
+Expert Electric Panels Engineering
+</h1>
+<p class="text-lg md:text-xl mb-8 max-w-5xl mx-auto text-gray-200 drop-shadow">
+Ess Bee Trade Box Pvt Ltd: Specializing in manufacturing and supplying All types of precision-crafted electrical & control panels with integrated components from Schneider, Anchor, Polycab and L&K.
+</p>
+<a href="#contact" class="btn-primary font-semibold py-3 px-8 rounded-lg shadow-lg text-lg hover:shadow-xl">
+Contact us
+</a>
+</div>
+</section>
+
+<section id="stats" class="py-20 parallax-bg">
+<div class="parallax-overlay"></div>
+<div class="container mx-auto px-6 relative z-10">
+<h2 class="section-title font-extrabold relative pt-10 text-center">Our Impact by the Numbers</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center mt-12">
+<div class="p-4 animate-on-scroll fade-in-up">
+<span class="counter-number text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]" data-target="800" data-format="int">0</span><span class="text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]">+</span>
+<p class="counter-label text-gray-700 mt-2 font-medium">Sq. Ft. Metal Fabricated Daily</p>
+</div>
+<div class="p-4 animate-on-scroll fade-in-up" style="animation-delay: 150ms;">
+<span class="counter-number text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]" data-target="1000" data-format="int">0</span><span class="text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]">+</span>
+<p class="counter-label text-gray-700 mt-2 font-medium">Components Installed Annually</p>
+</div>
+<div class="p-4 animate-on-scroll fade-in-up" style="animation-delay: 300ms;">
+<span class="counter-number text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]" data-target="20" data-format="int">0</span><span class="text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]">+</span>
+<p class="counter-label text-gray-700 mt-2 font-medium">Skilled Employees</p>
+</div>
+<div class="p-4 animate-on-scroll fade-in-up" style="animation-delay: 450ms;">
+<span class="counter-number text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]" data-target="95" data-format="int">0</span><span class="text-4xl md:text-5xl font-bold text-[var(--brand-primary-blue)]">%</span>
+<p class="counter-label text-gray-700 mt-2 font-medium">Energy-Efficient Operations</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="brief-cards" class="py-20 bg-gradient-to-b from-gray-50 to-gray-200">
+<div class="container mx-auto px-6">
+<div class="grid md:grid-cols-3 gap-8">
+<div id="about-brief" class="brief-section flex flex-col p-8 rounded-xl shadow-lg bg-white animate-on-scroll fade-in-up">
+<div class="text-center mb-4"><i class="fas fa-building text-3xl text-[var(--brand-primary-blue)]"></i></div>
+<h3 class="text-3xl md:text-4xl font-semibold mb-4 text-center">About Us</h3>
+<p class="flex-grow text-gray-600 mb-6 text-center">Established in 2024, we're an emerging force in precision panel engineering, dedicated to innovative fabrication, premium component integration, and exceeding industrial client expectations nationwide.</p>
+<a href="about-us.html" class="btn-primary inline-flex items-center justify-center font-semibold py-3 px-6 rounded-lg mx-auto mt-4">
+Learn More About Us
+<i class="fas fa-arrow-right ml-2"></i>
+</a>
+</div>
+<div id="what-we-do" class="brief-section flex flex-col p-8 rounded-xl shadow-lg bg-white animate-on-scroll fade-in-up" style="animation-delay: 200ms;">
+<div class="text-center mb-4"><i class="fas fa-industry text-3xl text-[var(--brand-primary-blue)]"></i></div>
+<h3 class="text-3xl md:text-4xl font-semibold mb-4 text-center">What We Do</h3>
+<p class="flex-grow text-gray-600 mb-6 text-center">We engineer panels through metal forming and welded frames, followed by powder coating, culminating in premium switchgear and MCB integration using certified brands like Anchor, Polycab, and Schneider for industrial reliability.</p>
+<a href="services.html" class="btn-primary inline-flex items-center justify-center font-semibold py-3 px-6 rounded-lg mx-auto mt-4">
+Explore Our Services
+<i class="fas fa-arrow-right ml-2"></i>
+</a>
+</div>
+<div id="our-facility" class="brief-section flex flex-col p-8 rounded-xl shadow-lg bg-white animate-on-scroll fade-in-up" style="animation-delay: 400ms;">
+<div class="text-center mb-4"><i class="fas fa-cogs text-3xl text-[var(--brand-primary-blue)]"></i></div>
+<h3 class="text-3xl md:text-4xl font-semibold mb-4 text-center">Our Facility</h3>
+<p class="flex-grow text-gray-600 mb-6 text-center">Our advanced manufacturing facility features precision fabrication systems to deliver engineered electrical panel solutions. All production undergoes rigorous testing protocols including dielectric strength checks and IP certification validation.</p>
+<a href="our-products.html" class="btn-primary inline-flex items-center justify-center font-semibold py-3 px-6 rounded-lg mx-auto mt-4">
+Discover Our Products
+<i class="fas fa-arrow-right ml-2"></i>
+</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="contact" class="py-20 bg-white">
+<div class="container mx-auto px-6">
+<h2 class="section-title font-extrabold relative pt-10 text-center">Discuss your next project</h2>
+<div class="max-w-5xl mx-auto mt-12">
+<img src="Assets/newest  contact cart.png" alt="My Contact Card" class="w-full h-auto rounded-lg shadow-xl">
+</div>
+</div>
+</section>
+
+<section id="contact-details" class="pre-footer py-16 bg-gray-200">
+<div class="container mx-auto px-6 text-sm">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+<div class="text-center">
+<h4 class="pre-footer-heading font-bold text-xl mb-4 tracking-wide">Quick Links</h4>
+<a href="index.html" class="pre-footer-link">Home</a>
+<a href="about-us.html" class="pre-footer-link">About Us</a>
+<a href="services.html" class="pre-footer-link">Services</a>
+<a href="contact.html" class="pre-footer-link">Contact Us</a>
+</div>
+<div class="text-center justify-text">
+<h4 class="pre-footer-heading font-bold text-xl mb-4 tracking-wide">Contact Us</h4>
+<p class="text-gray-600 leading-relaxed">
+<strong>Address:</strong> Jagdeo Nagar, beside Leeds Asian School,<br>Nahar Chowk, Danapur, Patna -801503<br>
+<strong>Phone:</strong> <a href="tel:+918709653866" class="pre-footer-link inline">+91-8709653866</a><br>
+<strong>Email:</strong> <a href="mailto:box24trade@gmail.com" class="pre-footer-link inline">box24trade@gmail.com</a>
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="py-8 bg-gray-900 text-gray-400">
+<div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+<p class="mb-4 md:mb-0 text-center md:text-left text-base">&copy; <span id="currentYear"></span> Ess Bee Trade Box Private Limited. All Rights Reserved.</p>
+</div>
+</footer>
+
+</main>
+
+<script>
+// --- Loading Screen Logic ---
+// I want the loader to show for at least 2.5 seconds to make sure the branding is seen, even on a fast connection. This prevents a jarring flash.
+const loader = document.getElementById('loader');
+const minLoadTime = 2500; // 2.5 seconds
+const pageLoadTime = Date.now();
+
+window.addEventListener('load', () => {
+const timeLapsed = Date.now() - pageLoadTime;
+const delay = Math.max(minLoadTime - timeLapsed, 0); // Calculate remaining time needed
+
+setTimeout(() => {
+if (loader) {
+loader.classList.add('hidden');
+}
+document.body.classList.remove('loading'); // Allow scrolling again
+}, delay);
+});
+
+
+// --- Dynamic Copyright Year ---
+// This little snippet just finds the 'currentYear' span and plops in the current year. No more manual updates every January!
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// --- Smooth scroll for on-page links ---
+// This finds all links starting with '#' and adds a smooth scroll behavior. It also calculates the sticky header's height to offset the scroll, so the section title isn't hidden underneath the nav.
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+const targetElement = document.querySelector(targetId);
+if (targetElement) {
+const headerOffset = document.querySelector('header').offsetHeight;
+const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+const offsetPosition = elementPosition - headerOffset;
+window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+}
+});
+});
+
+ // --- Mobile Menu Dropdown Logic ---
+ // Straightforward toggle logic for the mobile menu and the nested dropdowns within it.
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
+    const mobileServicesDropdownContent = document.getElementById('mobile-services-dropdown-content');
+    const mobileGalleryDropdownButton = document.getElementById('mobile-gallery-dropdown-button');
+    const mobileGalleryDropdownContent = document.getElementById('mobile-gallery-dropdown-content');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // Toggle for "What We Do" dropdown in mobile
+    if (mobileServicesDropdownButton && mobileServicesDropdownContent) {
+        mobileServicesDropdownButton.addEventListener('click', () => {
+            mobileServicesDropdownContent.classList.toggle('hidden');
+            const chevronIcon = mobileServicesDropdownButton.querySelector('.fa-chevron-down');
+            chevronIcon.classList.toggle('rotate-180');
+        });
+    }
+
+    // Toggle for "Gallery" dropdown in mobile
+    if (mobileGalleryDropdownButton && mobileGalleryDropdownContent) {
+        mobileGalleryDropdownButton.addEventListener('click', () => {
+            mobileGalleryDropdownContent.classList.toggle('hidden');
+            const chevronIcon = mobileGalleryDropdownButton.querySelector('.fa-chevron-down');
+            chevronIcon.classList.toggle('rotate-180');
+        });
+    }
+
+// --- Animate Counters Function ---
+// This function handles the number animation in the stats section. It uses requestAnimationFrame for a smooth, performant animation that doesn't bog down the browser. It ramps up from 0 to the target number over 2 seconds.
+function animateCounters() {
+const counters = document.querySelectorAll('.counter-number');
+const animationDuration = 2000;
+
+counters.forEach(counter => {
+const target = +counter.getAttribute('data-target');
+const format = counter.getAttribute('data-format') || 'int';
+let startTime = null;
+
+const step = (timestamp) => {
+if (!startTime) startTime = timestamp;
+const progress = timestamp - startTime;
+const percentage = Math.min(progress / animationDuration, 1);
+const currentValue = percentage * target;
+
+// I'm not using floats right now, but good to have the logic just in case.
+if (format === 'float') {
+counter.innerText = currentValue.toFixed(1);
+} else {
+counter.innerText = Math.floor(currentValue).toLocaleString();
+}
+
+if (progress < animationDuration) {
+window.requestAnimationFrame(step);
+} else {
+// Make sure it ends on the exact target number.
+counter.innerText = target.toLocaleString();
+}
+};
+window.requestAnimationFrame(step);
+});
+}
+
+// --- Intersection Observer for Animations (General) ---
+// This is way more performant than listening for scroll events. It watches for elements with the 'animate-on-scroll' class and adds a 'is-visible' class when they enter the viewport, triggering my CSS animations.
+const animationObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('is-visible', 'animate');
+} else {
+// I've commented this out, but you could re-add it to make animations re-trigger every time you scroll past.
+// entry.target.classList.remove('is-visible', 'animate');
+}
+});
+}, { threshold: 0.1 }); // Trigger when 10% of the element is visible.
+
+document.querySelectorAll('.animate-on-scroll, .section-title, #stats, #brief-cards, #contact, .pre-footer-heading, .brief-section').forEach(el => {
+animationObserver.observe(el);
+});
+
+// --- Intersection Observer for Stats Counter (Specific) ---
+// I need a separate observer for the stats section. This one will trigger the animateCounters() function and then unobserve itself, so the numbers don't re-animate every time you scroll past them. One and done.
+const statsObserver = new IntersectionObserver((entries, observer) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+animateCounters();
+observer.unobserve(entry.target);
+}
+});
+}, { threshold: 0.2 }); // Trigger when 20% of the stats section is visible.
+
+const statsSection = document.getElementById('stats');
+if (statsSection) { statsObserver.observe(statsSection); }
+
+// --- Active nav link highlighting on scroll ---
+// This script watches the scroll position and adds an active class to the correct nav link. It's important for user experience so they know where they are on the page.
+const sections = document.querySelectorAll('main section[id]');
+const navLinksDesktop = document.querySelectorAll('header nav .hidden.md\\:flex a.nav-link');
+
+function updateActiveLink() {
+let current = 'home';
+const headerHeight = document.querySelector('header').offsetHeight;
+sections.forEach(section => {
+const sectionTop = section.offsetTop - headerHeight - 60; // Add a 60px buffer
+if (window.pageYOffset >= sectionTop) {
+current = section.getAttribute('id');
+}
+});
+
+// Update the desktop links
+navLinksDesktop.forEach(link => {
+link.classList.remove('nav-link-active');
+// This logic checks if the link's href matches the current section ID.
+if (link.href.includes(`#${current}`) || (current === 'home' && (link.getAttribute('href') === 'index.html'))) {
+link.classList.add('nav-link-active');
+}
+});
+
+// Update the mobile links
+const navLinksMobileDynamic = document.querySelectorAll('#mobile-menu a.nav-link');
+navLinksMobileDynamic.forEach(link => {
+    link.classList.remove('nav-link-active');
+    if (link.href.includes(`#${current}`) || (current === 'home' && (link.getAttribute('href') === 'index.html'))) {
+        link.classList.add('nav-link-active');
+    }
+});
+}
+window.addEventListener('scroll', updateActiveLink);
+
+// --- Smooth scroll from other pages ---
+// This is a neat trick. If a user lands on this page from a link like 'about.html#contact', this code waits for the page to load, then finds the '#contact' section and smoothly scrolls to it.
+document.addEventListener("DOMContentLoaded", () => {
+updateActiveLink(); // Run once on load to set the initial state.
+if (window.location.hash) {
+const targetId = window.location.hash;
+const targetElement = document.querySelector(targetId);
+if (targetElement) {
+setTimeout(() => { // Timeout gives the browser a moment to render everything first.
+const headerOffset = document.querySelector('header').offsetHeight;
+const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+const offsetPosition = elementPosition - headerOffset;
+window.scrollTo({
+top: offsetPosition,
+behavior: 'smooth'
+});
+}, 100);
+}
+}
+});
+</script>
+</body>
+</html>
